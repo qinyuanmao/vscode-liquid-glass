@@ -214,11 +214,31 @@ async function updateVSCodeSettings(cssPath: string, enable: boolean) {
             imports.push(cssUri);
             await config.update('vscode_custom_css.imports', imports, vscode.ConfigurationTarget.Global);
         }
+
+        // Prompt user to enable Custom CSS and JS
+        const enableResult = await vscode.window.showInformationMessage(
+            'To apply the Liquid Glass effect, you need to enable Custom CSS and JS. This will require administrator privileges.',
+            'Enable Custom CSS',
+            'Cancel'
+        );
+        if (enableResult === 'Enable Custom CSS') {
+            await vscode.commands.executeCommand('extension.installCustomCSS');
+        }
     } else {
         // Remove custom CSS import
         const imports = config.get<string[]>('vscode_custom_css.imports', []);
         const filteredImports = imports.filter(i => !i.includes(CSS_FILE_NAME));
         await config.update('vscode_custom_css.imports', filteredImports, vscode.ConfigurationTarget.Global);
+
+        // Prompt user to uninstall Custom CSS patches
+        const uninstallResult = await vscode.window.showInformationMessage(
+            'Do you want to uninstall Custom CSS patches?',
+            'Uninstall',
+            'Skip'
+        );
+        if (uninstallResult === 'Uninstall') {
+            await vscode.commands.executeCommand('extension.uninstallCustomCSS');
+        }
     }
 }
 
