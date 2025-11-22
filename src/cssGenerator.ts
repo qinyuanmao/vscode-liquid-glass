@@ -287,7 +287,7 @@ div.context-view {
 .monaco-workbench .editor-widget.suggest-widget,
 .suggest-widget,
 .editor-widget.suggest-widget {
-  background: rgba(30, 30, 30, 0.85) !important;
+  background: rgba(30, 30, 30, 0.5) !important;
   backdrop-filter: var(--glass-blur) var(--glass-saturate) var(--glass-brightness) !important;
   -webkit-backdrop-filter: var(--glass-blur) var(--glass-saturate) var(--glass-brightness) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
@@ -315,7 +315,7 @@ div.context-view {
 /* 参数提示框 (Parameter Hints) */
 .monaco-workbench .parameter-hints-widget,
 .parameter-hints-widget {
-  background: rgba(30, 30, 30, 0.85) !important;
+  background: rgba(30, 30, 30, 0.5) !important;
   backdrop-filter: var(--glass-blur) var(--glass-saturate) var(--glass-brightness) !important;
   -webkit-backdrop-filter: var(--glass-blur) var(--glass-saturate) var(--glass-brightness) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
