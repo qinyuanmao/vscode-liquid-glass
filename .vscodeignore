@@ -9,3 +9,8 @@ vsc-extension-quickstart.md
 **/*.map
 **/*.ts
 node_modules/**
+generate-logo.html
+generate-logo.js
+generate_logo.py
+push-to-github.sh
+images/wallpaper.png
