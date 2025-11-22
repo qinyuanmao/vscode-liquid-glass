@@ -1,0 +1,97 @@
+{
+  "name": "vscode-liquid-glass",
+  "displayName": "VSCode Liquid Glass",
+  "description": "Beautiful liquid glass effect for VSCode with customizable wallpaper",
+  "version": "1.0.0",
+  "publisher": "your-publisher-name",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "keywords": [
+    "theme",
+    "glass",
+    "transparency",
+    "wallpaper",
+    "background"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "vscode-liquid-glass.enable",
+        "title": "Liquid Glass: Enable"
+      },
+      {
+        "command": "vscode-liquid-glass.disable",
+        "title": "Liquid Glass: Disable"
+      },
+      {
+        "command": "vscode-liquid-glass.selectWallpaper",
+        "title": "Liquid Glass: Select Wallpaper"
+      },
+      {
+        "command": "vscode-liquid-glass.configure",
+        "title": "Liquid Glass: Configure Transparency"
+      }
+    ],
+    "configuration": {
+      "title": "Liquid Glass",
+      "properties": {
+        "liquidGlass.enabled": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable/disable liquid glass effect"
+        },
+        "liquidGlass.wallpaperPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to wallpaper image"
+        },
+        "liquidGlass.editorOpacity": {
+          "type": "number",
+          "default": 0.2,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Editor area opacity (0 = transparent, 1 = opaque)"
+        },
+        "liquidGlass.sidebarOpacity": {
+          "type": "number",
+          "default": 0.3,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Sidebar opacity (0 = transparent, 1 = opaque)"
+        },
+        "liquidGlass.quickInputOpacity": {
+          "type": "number",
+          "default": 0.5,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Quick input opacity (0 = transparent, 1 = opaque)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/vscode": "^1.80.0",
+    "@vscode/vsce": "^2.22.0",
+    "typescript": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/vscode-liquid-glass"
+  },
+  "license": "MIT"
+}

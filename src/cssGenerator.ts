@@ -1,0 +1,306 @@
+import * as vscode from 'vscode';
+
+export function generateCSS(config: vscode.WorkspaceConfiguration): string {
+    const wallpaperPath = config.get<string>('wallpaperPath', '');
+    const editorOpacity = config.get<number>('editorOpacity', 0.2);
+    const sidebarOpacity = config.get<number>('sidebarOpacity', 0.3);
+    const quickInputOpacity = config.get<number>('quickInputOpacity', 0.5);
+
+    // Convert file path to file:// URL and escape for CSS
+    const wallpaperUrl = wallpaperPath ? `file://${wallpaperPath.replace(/\\/g, '/')}` : '';
+
+    return `/* VSCode Liquid Glass 效果 */
+/* 透明度可配置 + 完整弹出层覆盖 */
+
+/* ==================== 通用 Liquid Glass 样式 ==================== */
+
+:root {
+  /* Liquid Glass 颜色变量 */
+  --glass-bg-light: rgba(255, 255, 255, ${sidebarOpacity});
+  --glass-bg-dark: rgba(30, 30, 30, ${sidebarOpacity});
+  --glass-border: transparent;
+  --glass-shadow: rgba(0, 0, 0, 0.4);
+
+  /* 模糊和饱和度 */
+  --glass-blur: blur(8px);
+  --glass-saturate: saturate(130%);
+  --glass-brightness: brightness(1.05);
+}
+
+/* ==================== 0. 整个窗口毛玻璃背景 ==================== */
+
+/* 主工作区背景 */
+html,
+body,
+.monaco-workbench,
+.monaco-workbench .monaco-grid-view,
+.monaco-workbench .part.editor > .content {
+  ${wallpaperUrl ? `background-image: url('${wallpaperUrl}') !important;` : ''}
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+}
+
+/* 编辑器区域半透明 */
+.monaco-workbench .editor-container,
+.monaco-workbench .split-view-view,
+.monaco-workbench .part.editor,
+.monaco-workbench .part.editor > .content,
+.monaco-workbench .editor-instance,
+.monaco-workbench .editor-instance > .monaco-editor,
+.monaco-editor,
+.monaco-editor .overflow-guard,
+.monaco-editor .monaco-editor-background,
+.monaco-editor-background {
+  background: rgba(30, 30, 30, ${editorOpacity}) !important;
+}
+
+/* 行号区域半透明 */
+.monaco-editor .margin,
+.monaco-editor .glyph-margin,
+.monaco-editor .line-numbers {
+  background: rgba(30, 30, 30, ${editorOpacity}) !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+}
+
+/* 侧边栏和面板半透明 */
+.monaco-workbench .part.sidebar,
+.monaco-workbench .part.auxiliarybar,
+.monaco-workbench .part.panel,
+.monaco-workbench .part.activitybar,
+.monaco-workbench .part.titlebar,
+.monaco-workbench .part.statusbar {
+  background: rgba(30, 30, 30, ${sidebarOpacity}) !important;
+  background-color: rgba(30, 30, 30, ${sidebarOpacity}) !important;
+}
+
+/* 折叠菜单标题需要背景色防止内容透上来 */
+.pane-header,
+.panel-header,
+.composite-title,
+.monaco-pane-view .pane-header,
+.split-view-view .pane-header,
+.sidebar-pane .pane-header,
+div[class*="pane-header"],
+.monaco-workbench .pane-header,
+.monaco-workbench .panel-header,
+.monaco-workbench .composite-title,
+.monaco-workbench .part.sidebar .pane-header,
+.monaco-workbench .part.sidebar .panel-header {
+  background: rgba(30, 30, 30, 0.98) !important;
+  background-color: rgba(30, 30, 30, 0.98) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  position: relative !important;
+  z-index: 100 !important;
+}
+
+/* 文件树项需要轻微背景色防止重叠 - 但排除 Quick Input */
+.monaco-workbench .part.sidebar .monaco-list-row,
+.monaco-workbench .part.sidebar .monaco-tl-row,
+.monaco-workbench .part.auxiliarybar .monaco-list-row,
+.monaco-workbench .part.auxiliarybar .monaco-tl-row,
+.explorer-item,
+.tree-explorer-viewlet-tree-view .monaco-list-row {
+  background: rgba(30, 30, 30, 0.1) !important;
+  background-color: rgba(30, 30, 30, 0.1) !important;
+  backdrop-filter: blur(2px) !important;
+  -webkit-backdrop-filter: blur(2px) !important;
+}
+
+/* hover 状态 - 但排除 Quick Input */
+.monaco-workbench .part.sidebar .monaco-list-row:hover,
+.monaco-workbench .part.auxiliarybar .monaco-list-row:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  background-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* 子元素背景透明 - 但排除 pane-header 和 list-row */
+.monaco-workbench .part.sidebar *:not(.pane-header):not(.panel-header):not(.composite-title):not(.monaco-list-row):not(.monaco-tl-row),
+.monaco-workbench .part.auxiliarybar *:not(.pane-header):not(.panel-header):not(.composite-title):not(.monaco-list-row):not(.monaco-tl-row),
+.monaco-workbench .part.panel *:not(.pane-header):not(.panel-header):not(.monaco-list-row),
+.monaco-workbench .part.activitybar *,
+.monaco-workbench .part.titlebar * {
+  background-color: transparent !important;
+}
+
+/* 标签栏半透明 */
+.monaco-workbench .tabs-and-actions-container,
+.monaco-workbench .editor-group-container > .title,
+.monaco-workbench .title.tabs,
+.monaco-workbench .tabs-container {
+  background: rgba(30, 30, 30, ${sidebarOpacity}) !important;
+  background-color: rgba(30, 30, 30, ${sidebarOpacity}) !important;
+}
+
+/* 单个标签透明 */
+.monaco-workbench .tab {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+.monaco-workbench .tab.active {
+  background: rgba(255, 255, 255, 0.1) !important;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ==================== Quick Input 居中 + Liquid Glass ==================== */
+
+.monaco-workbench .quick-input-widget {
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 600px !important;
+  max-width: 90vw !important;
+
+  background: rgba(30, 30, 30, ${quickInputOpacity}) !important;
+  background-color: rgba(30, 30, 30, ${quickInputOpacity}) !important;
+  backdrop-filter: var(--glass-blur) var(--glass-saturate) var(--glass-brightness) !important;
+  -webkit-backdrop-filter: var(--glass-blur) var(--glass-saturate) var(--glass-brightness) !important;
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.5) !important;
+  border-radius: 16px !important;
+}
+
+.monaco-workbench .quick-input-header,
+.monaco-workbench .quick-input-list,
+.monaco-workbench .quick-input-title,
+.monaco-workbench .quick-input-list .monaco-list {
+  background: transparent !important;
+}
+
+.monaco-workbench .quick-input-widget .monaco-inputbox {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 8px !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+}
+
+.monaco-workbench .quick-input-list .monaco-list-row {
+  background: transparent !important;
+  background-color: transparent !important;
+  border-radius: 6px !important;
+  margin: 0px !important;
+  padding-left: 12px !important;
+}
+
+.monaco-workbench .quick-input-list .monaco-list-row:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+}
+
+.monaco-workbench .quick-input-list .monaco-list-row.focused {
+  background: rgba(90, 150, 255, 0.25) !important;
+  background-color: rgba(90, 150, 255, 0.25) !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+}
+
+/* ==================== 弹出层毛玻璃效果 ==================== */
+
+/* Context Menu */
+.monaco-workbench .context-view,
+.shadow-root-host .context-view,
+div.context-view {
+  background: var(--glass-bg-dark) !important;
+  backdrop-filter: var(--glass-blur) var(--glass-saturate) var(--glass-brightness) !important;
+  -webkit-backdrop-filter: var(--glass-blur) var(--glass-saturate) var(--glass-brightness) !important;
+  border: none !important;
+  box-shadow: 0 10px 40px 0 var(--glass-shadow) !important;
+  border-radius: 10px !important;
+  padding: 6px !important;
+}
+
+/* 通知消息 */
+.monaco-workbench .notifications-toasts,
+.monaco-workbench .notification-toast,
+.monaco-workbench .notification-toast-container,
+.monaco-workbench .notification-list-item,
+.notifications-toasts,
+.notification-toast,
+.notification-toast-container,
+.notification-list-item,
+.notifications-center {
+  background: rgba(30, 30, 30, 0) !important;
+  backdrop-filter: var(--glass-blur) var(--glass-saturate) var(--glass-brightness) !important;
+  -webkit-backdrop-filter: var(--glass-blur) var(--glass-saturate) var(--glass-brightness) !important;
+  border: none !important;
+  box-shadow: 0 12px 40px 0 var(--glass-shadow) !important;
+  border-radius: 12px !important;
+}
+
+/* 代码定义悬停 */
+.monaco-workbench .monaco-hover,
+.monaco-workbench .monaco-editor-hover,
+.monaco-workbench .editor-hover-content,
+.monaco-hover-content,
+.monaco-hover,
+.monaco-editor-hover,
+.editor-hover-content {
+  background: rgba(30, 30, 30, 0) !important;
+  backdrop-filter: var(--glass-blur) var(--glass-saturate) var(--glass-brightness) !important;
+  -webkit-backdrop-filter: var(--glass-blur) var(--glass-saturate) var(--glass-brightness) !important;
+  border: none !important;
+  box-shadow: 0 8px 30px 0 var(--glass-shadow) !important;
+  border-radius: 10px !important;
+}
+
+/* Hover 内容区域 */
+.monaco-workbench .monaco-hover .hover-contents,
+.monaco-hover .hover-contents,
+.monaco-workbench .monaco-hover .hover-row,
+.monaco-hover .hover-row,
+.monaco-workbench .monaco-hover .monaco-editor,
+.monaco-hover .monaco-editor {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 10px !important;
+}
+
+/* Monaco List 统一选中效果 */
+.monaco-workbench .monaco-list .monaco-list-row:hover,
+.monaco-list .monaco-list-row:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+  border-radius: 6px !important;
+}
+
+.monaco-workbench .monaco-list .monaco-list-row.focused,
+.monaco-list .monaco-list-row.focused,
+.monaco-workbench .monaco-list .monaco-list-row:focus,
+.monaco-list .monaco-list-row:focus {
+  background: rgba(90, 150, 255, 0.3) !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+  border-radius: 6px !important;
+  outline: none !important;
+}
+
+.monaco-workbench .monaco-list .monaco-list-row.selected,
+.monaco-list .monaco-list-row.selected,
+.monaco-workbench .monaco-list .monaco-list-row[aria-selected="true"],
+.monaco-list .monaco-list-row[aria-selected="true"] {
+  background: rgba(90, 150, 255, 0.25) !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+  border-radius: 6px !important;
+}
+
+.monaco-workbench .monaco-list .monaco-list-row.selected.focused,
+.monaco-list .monaco-list-row.selected.focused,
+.monaco-workbench .monaco-list .monaco-list-row.selected:focus,
+.monaco-list .monaco-list-row.selected:focus {
+  background: rgba(90, 150, 255, 0.4) !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+  border-radius: 6px !important;
+}
+`;
+}
