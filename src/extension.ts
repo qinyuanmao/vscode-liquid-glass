@@ -90,6 +90,13 @@ async function enableLiquidGlass(context: vscode.ExtensionContext, silent: boole
         // Update enabled status
         await config.update('enabled', true, vscode.ConfigurationTarget.Global);
 
+        // Automatically reload Custom CSS and JS
+        try {
+            await vscode.commands.executeCommand('extension.reloadCustomCSS');
+        } catch (error) {
+            console.log('Could not reload Custom CSS automatically:', error);
+        }
+
         // Only show message if not silent (i.e., user explicitly enabled it)
         if (!silent) {
             vscode.window.showInformationMessage(
@@ -115,6 +122,13 @@ async function disableLiquidGlass(context: vscode.ExtensionContext) {
 
         // Remove custom CSS from settings
         await updateVSCodeSettings('', false);
+
+        // Automatically reload Custom CSS and JS
+        try {
+            await vscode.commands.executeCommand('extension.reloadCustomCSS');
+        } catch (error) {
+            console.log('Could not reload Custom CSS automatically:', error);
+        }
 
         vscode.window.showInformationMessage(
             'Liquid Glass disabled! Please reload VSCode for changes to take effect.',
