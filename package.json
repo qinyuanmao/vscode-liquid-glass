@@ -3,7 +3,7 @@
   "displayName": "VSCode Liquid Glass",
   "description": "Beautiful liquid glass effect for VSCode with customizable wallpaper",
   "version": "1.0.0",
-  "publisher": "your-publisher-name",
+  "publisher": "VSCodeLiquidGlass",
   "icon": "icon.png",
   "engines": {
     "vscode": "^1.80.0"
