@@ -198,14 +198,6 @@ async function updateVSCodeSettings(cssPath: string, enable: boolean) {
             imports.push(cssUri);
             await config.update('vscode_custom_css.imports', imports, vscode.ConfigurationTarget.Global);
         }
-
-        // Try to set policy, but don't fail if it doesn't exist
-        try {
-            await config.update('vscode_custom_css.policy', true, vscode.ConfigurationTarget.Global);
-        } catch (error) {
-            console.warn('Could not set vscode_custom_css.policy:', error);
-            // This is not critical, continue anyway
-        }
     } else {
         // Remove custom CSS import
         const imports = config.get<string[]>('vscode_custom_css.imports', []);
