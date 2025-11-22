@@ -323,6 +323,33 @@ div.context-view {
   border-radius: 10px !important;
 }
 
+/* 搜索框 (Find Widget) */
+.monaco-workbench .find-widget,
+.monaco-workbench .editor-widget.find-widget,
+.find-widget,
+.editor-widget.find-widget {
+  background: rgba(30, 30, 30, 0.5) !important;
+  backdrop-filter: var(--glass-blur) var(--glass-saturate) var(--glass-brightness) !important;
+  -webkit-backdrop-filter: var(--glass-blur) var(--glass-saturate) var(--glass-brightness) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 8px 30px 0 var(--glass-shadow) !important;
+  border-radius: 10px !important;
+}
+
+/* 搜索视图 (Search View) */
+.monaco-workbench .search-view,
+.search-view {
+  background: transparent !important;
+}
+
+.monaco-workbench .search-view .search-widget,
+.search-view .search-widget {
+  background: rgba(30, 30, 30, 0.3) !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+  border-radius: 8px !important;
+}
+
 /* Monaco List 统一选中效果 */
 .monaco-workbench .monaco-list .monaco-list-row:hover,
 .monaco-list .monaco-list-row:hover {
