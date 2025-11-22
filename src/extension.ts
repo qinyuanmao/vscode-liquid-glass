@@ -5,6 +5,8 @@ import { generateCSS } from './cssGenerator';
 
 const CSS_FILE_NAME = 'liquid-glass-custom.css';
 
+let isApplyingChanges = false;
+
 export function activate(context: vscode.ExtensionContext) {
     console.log('Liquid Glass extension is now active');
 
@@ -30,29 +32,38 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(enableCommand, disableCommand, selectWallpaperCommand, configureCommand);
 
-    // Auto-enable if enabled in settings
+    // Auto-enable if enabled in settings (only on first activation)
     const config = vscode.workspace.getConfiguration('liquidGlass');
     if (config.get('enabled')) {
-        enableLiquidGlass(context);
+        enableLiquidGlass(context, true);
     }
 
-    // Watch for configuration changes
+    // Watch for configuration changes (only wallpaperPath and opacity changes)
     vscode.workspace.onDidChangeConfiguration(e => {
-        if (e.affectsConfiguration('liquidGlass')) {
+        if (isApplyingChanges) {
+            return; // Skip if we're applying changes ourselves
+        }
+
+        // Only regenerate CSS if wallpaper or opacity changed, not on enable/disable
+        if (e.affectsConfiguration('liquidGlass.wallpaperPath') ||
+            e.affectsConfiguration('liquidGlass.editorOpacity') ||
+            e.affectsConfiguration('liquidGlass.sidebarOpacity') ||
+            e.affectsConfiguration('liquidGlass.quickInputOpacity')) {
             const config = vscode.workspace.getConfiguration('liquidGlass');
             if (config.get('enabled')) {
-                enableLiquidGlass(context);
+                enableLiquidGlass(context, true);
             }
         }
     });
 }
 
-async function enableLiquidGlass(context: vscode.ExtensionContext) {
+async function enableLiquidGlass(context: vscode.ExtensionContext, silent: boolean = false) {
     try {
+        isApplyingChanges = true;
         const config = vscode.workspace.getConfiguration('liquidGlass');
         const wallpaperPath = config.get<string>('wallpaperPath', '');
 
-        if (!wallpaperPath) {
+        if (!wallpaperPath && !silent) {
             const result = await vscode.window.showInformationMessage(
                 'No wallpaper selected. Would you like to select one now?',
                 'Select Wallpaper',
@@ -78,16 +89,21 @@ async function enableLiquidGlass(context: vscode.ExtensionContext) {
         // Update enabled status
         await config.update('enabled', true, vscode.ConfigurationTarget.Global);
 
-        vscode.window.showInformationMessage(
-            'Liquid Glass enabled! Please reload VSCode for changes to take effect.',
-            'Reload Now'
-        ).then(selection => {
-            if (selection === 'Reload Now') {
-                vscode.commands.executeCommand('workbench.action.reloadWindow');
-            }
-        });
+        // Only show message if not silent (i.e., user explicitly enabled it)
+        if (!silent) {
+            vscode.window.showInformationMessage(
+                'Liquid Glass enabled! Please reload VSCode for changes to take effect.',
+                'Reload Now'
+            ).then(selection => {
+                if (selection === 'Reload Now') {
+                    vscode.commands.executeCommand('workbench.action.reloadWindow');
+                }
+            });
+        }
     } catch (error) {
         vscode.window.showErrorMessage(`Failed to enable Liquid Glass: ${error}`);
+    } finally {
+        isApplyingChanges = false;
     }
 }
 
