@@ -173,6 +173,20 @@ async function configureTransparency() {
 }
 
 async function updateVSCodeSettings(cssPath: string, enable: boolean) {
+    // Check if Custom CSS and JS Loader extension is installed
+    const customCSSExtension = vscode.extensions.getExtension('be5invis.vscode-custom-css');
+    if (!customCSSExtension) {
+        const result = await vscode.window.showErrorMessage(
+            'Custom CSS and JS Loader extension is not installed. This extension is required for Liquid Glass to work.',
+            'Install Extension',
+            'Cancel'
+        );
+        if (result === 'Install Extension') {
+            vscode.env.openExternal(vscode.Uri.parse('vscode:extension/be5invis.vscode-custom-css'));
+        }
+        throw new Error('Custom CSS and JS Loader extension is required');
+    }
+
     const config = vscode.workspace.getConfiguration();
 
     if (enable) {
@@ -185,7 +199,13 @@ async function updateVSCodeSettings(cssPath: string, enable: boolean) {
             await config.update('vscode_custom_css.imports', imports, vscode.ConfigurationTarget.Global);
         }
 
-        await config.update('vscode_custom_css.policy', true, vscode.ConfigurationTarget.Global);
+        // Try to set policy, but don't fail if it doesn't exist
+        try {
+            await config.update('vscode_custom_css.policy', true, vscode.ConfigurationTarget.Global);
+        } catch (error) {
+            console.warn('Could not set vscode_custom_css.policy:', error);
+            // This is not critical, continue anyway
+        }
     } else {
         // Remove custom CSS import
         const imports = config.get<string[]>('vscode_custom_css.imports', []);
