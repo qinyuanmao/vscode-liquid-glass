@@ -4,6 +4,7 @@
   "description": "Beautiful liquid glass effect for VSCode with customizable wallpaper",
   "version": "1.0.0",
   "publisher": "your-publisher-name",
+  "icon": "icon.png",
   "engines": {
     "vscode": "^1.80.0"
   },
@@ -91,7 +92,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/vscode-liquid-glass"
+    "url": "https://github.com/qinyuanmao/vscode-liquid-glass"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "canvas": "^3.2.0"
+  }
 }
