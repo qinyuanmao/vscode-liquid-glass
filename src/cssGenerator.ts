@@ -1,4 +1,6 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as path from 'path';
 
 export function generateCSS(config: vscode.WorkspaceConfiguration): string {
     const wallpaperPath = config.get<string>('wallpaperPath', '');
@@ -6,8 +8,25 @@ export function generateCSS(config: vscode.WorkspaceConfiguration): string {
     const sidebarOpacity = config.get<number>('sidebarOpacity', 0.3);
     const quickInputOpacity = config.get<number>('quickInputOpacity', 0.5);
 
-    // Convert file path to file:// URL and escape for CSS
-    const wallpaperUrl = wallpaperPath ? `file://${wallpaperPath.replace(/\\/g, '/')}` : '';
+    // Convert wallpaper to base64 data URL for better compatibility
+    let wallpaperUrl = '';
+    if (wallpaperPath && fs.existsSync(wallpaperPath)) {
+        try {
+            const imageBuffer = fs.readFileSync(wallpaperPath);
+            const base64Image = imageBuffer.toString('base64');
+            const ext = path.extname(wallpaperPath).toLowerCase();
+            const mimeType = ext === '.png' ? 'image/png' :
+                           ext === '.jpg' || ext === '.jpeg' ? 'image/jpeg' :
+                           ext === '.gif' ? 'image/gif' :
+                           ext === '.webp' ? 'image/webp' :
+                           ext === '.bmp' ? 'image/bmp' : 'image/jpeg';
+            wallpaperUrl = `data:${mimeType};base64,${base64Image}`;
+        } catch (error) {
+            console.error('Failed to load wallpaper:', error);
+            // Fallback to file:// URL
+            wallpaperUrl = `file://${wallpaperPath.replace(/\\/g, '/')}`;
+        }
+    }
 
     return `/* VSCode Liquid Glass 效果 */
 /* 透明度可配置 + 完整弹出层覆盖 */
