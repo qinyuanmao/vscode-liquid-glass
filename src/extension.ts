@@ -84,7 +84,8 @@ async function enableLiquidGlass(context: vscode.ExtensionContext, silent: boole
         await fs.promises.writeFile(cssPath, cssContent, 'utf-8');
 
         // Update VSCode settings to use custom CSS
-        await updateVSCodeSettings(cssPath, true);
+        // Only show Custom CSS prompt when user explicitly enables (not silent)
+        await updateVSCodeSettings(cssPath, true, !silent);
 
         // Update enabled status
         await config.update('enabled', true, vscode.ConfigurationTarget.Global);
@@ -188,7 +189,7 @@ async function configureTransparency() {
     }
 }
 
-async function updateVSCodeSettings(cssPath: string, enable: boolean) {
+async function updateVSCodeSettings(cssPath: string, enable: boolean, showPrompt: boolean = false) {
     // Check if Custom CSS and JS Loader extension is installed
     const customCSSExtension = vscode.extensions.getExtension('be5invis.vscode-custom-css');
     if (!customCSSExtension) {
@@ -215,30 +216,22 @@ async function updateVSCodeSettings(cssPath: string, enable: boolean) {
             await config.update('vscode_custom_css.imports', imports, vscode.ConfigurationTarget.Global);
         }
 
-        // Prompt user to enable Custom CSS and JS
-        const enableResult = await vscode.window.showInformationMessage(
-            'To apply the Liquid Glass effect, you need to enable Custom CSS and JS. This will require administrator privileges.',
-            'Enable Custom CSS',
-            'Cancel'
-        );
-        if (enableResult === 'Enable Custom CSS') {
-            await vscode.commands.executeCommand('extension.installCustomCSS');
+        // Only prompt user if explicitly requested (e.g., first time enabling)
+        if (showPrompt) {
+            const enableResult = await vscode.window.showInformationMessage(
+                'To apply the Liquid Glass effect, you need to enable Custom CSS and JS. This will require administrator privileges.',
+                'Enable Custom CSS',
+                'Later'
+            );
+            if (enableResult === 'Enable Custom CSS') {
+                await vscode.commands.executeCommand('extension.installCustomCSS');
+            }
         }
     } else {
         // Remove custom CSS import
         const imports = config.get<string[]>('vscode_custom_css.imports', []);
         const filteredImports = imports.filter(i => !i.includes(CSS_FILE_NAME));
         await config.update('vscode_custom_css.imports', filteredImports, vscode.ConfigurationTarget.Global);
-
-        // Prompt user to uninstall Custom CSS patches
-        const uninstallResult = await vscode.window.showInformationMessage(
-            'Do you want to uninstall Custom CSS patches?',
-            'Uninstall',
-            'Skip'
-        );
-        if (uninstallResult === 'Uninstall') {
-            await vscode.commands.executeCommand('extension.uninstallCustomCSS');
-        }
     }
 }
 
