@@ -2,7 +2,7 @@
 
 Beautiful liquid glass effect for VSCode with customizable wallpaper and transparency settings.
 
-![Liquid Glass Effect](./images/SCR-20251122-pker.jpeg)
+![Liquid Glass Effect](./images/SCR-20251123-ilrq.jpeg)
 
 ## Features
 
@@ -124,7 +124,7 @@ This extension requires the [Custom CSS and JS Loader](https://marketplace.visua
 
 Experience the beautiful liquid glass effect with your custom wallpaper:
 
-![Example Screenshot](./images/SCR-20251122-pker.jpeg)
+![Example Screenshot](./images/SCR-20251123-ilrq.jpeg)
 
 The extension provides:
 - ✨ Transparent editor with customizable opacity
