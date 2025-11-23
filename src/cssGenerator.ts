@@ -3,32 +3,39 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 export function generateCSS(config: vscode.WorkspaceConfiguration): string {
-    const wallpaperPath = config.get<string>('wallpaperPath', '');
-    const editorOpacity = config.get<number>('editorOpacity', 0.2);
-    const sidebarOpacity = config.get<number>('sidebarOpacity', 0.3);
-    const quickInputOpacity = config.get<number>('quickInputOpacity', 0.5);
+  const wallpaperPath = config.get<string>('wallpaperPath', '');
+  const editorOpacity = config.get<number>('editorOpacity', 0.2);
+  const sidebarOpacity = config.get<number>('sidebarOpacity', 0.3);
+  const quickInputOpacity = config.get<number>('quickInputOpacity', 0.5);
 
-    // Convert wallpaper to base64 data URL for better compatibility
-    let wallpaperUrl = '';
-    if (wallpaperPath && fs.existsSync(wallpaperPath)) {
-        try {
-            const imageBuffer = fs.readFileSync(wallpaperPath);
-            const base64Image = imageBuffer.toString('base64');
-            const ext = path.extname(wallpaperPath).toLowerCase();
-            const mimeType = ext === '.png' ? 'image/png' :
-                           ext === '.jpg' || ext === '.jpeg' ? 'image/jpeg' :
-                           ext === '.gif' ? 'image/gif' :
-                           ext === '.webp' ? 'image/webp' :
-                           ext === '.bmp' ? 'image/bmp' : 'image/jpeg';
-            wallpaperUrl = `data:${mimeType};base64,${base64Image}`;
-        } catch (error) {
-            console.error('Failed to load wallpaper:', error);
-            // Fallback to file:// URL
-            wallpaperUrl = `file://${wallpaperPath.replace(/\\/g, '/')}`;
-        }
+  // Convert wallpaper to base64 data URL for better compatibility
+  let wallpaperUrl = '';
+  if (wallpaperPath && fs.existsSync(wallpaperPath)) {
+    try {
+      const imageBuffer = fs.readFileSync(wallpaperPath);
+      const base64Image = imageBuffer.toString('base64');
+      const ext = path.extname(wallpaperPath).toLowerCase();
+      const mimeType =
+        ext === '.png'
+          ? 'image/png'
+          : ext === '.jpg' || ext === '.jpeg'
+          ? 'image/jpeg'
+          : ext === '.gif'
+          ? 'image/gif'
+          : ext === '.webp'
+          ? 'image/webp'
+          : ext === '.bmp'
+          ? 'image/bmp'
+          : 'image/jpeg';
+      wallpaperUrl = `data:${mimeType};base64,${base64Image}`;
+    } catch (error) {
+      console.error('Failed to load wallpaper:', error);
+      // Fallback to file:// URL
+      wallpaperUrl = `file://${wallpaperPath.replace(/\\/g, '/')}`;
     }
+  }
 
-    return `/* VSCode Liquid Glass 效果 */
+  return `/* VSCode Liquid Glass 效果 */
 /* 透明度可配置 + 完整弹出层覆盖 */
 
 /* ==================== 通用 Liquid Glass 样式 ==================== */
@@ -107,8 +114,8 @@ div[class*="pane-header"],
 .monaco-workbench .composite-title,
 .monaco-workbench .part.sidebar .pane-header,
 .monaco-workbench .part.sidebar .panel-header {
-  background: rgba(30, 30, 30, 0.98) !important;
-  background-color: rgba(30, 30, 30, 0.98) !important;
+  background: rgba(30, 30, 30, 0.28) !important;
+  background-color: rgba(30, 30, 30, 0.28) !important;
   backdrop-filter: blur(20px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
   position: relative !important;
@@ -136,9 +143,9 @@ div[class*="pane-header"],
 }
 
 /* 子元素背景透明 - 但排除 pane-header 和 list-row */
+/* Panel 不使用通配符规则，有独立的样式控制 */
 .monaco-workbench .part.sidebar *:not(.pane-header):not(.panel-header):not(.composite-title):not(.monaco-list-row):not(.monaco-tl-row),
 .monaco-workbench .part.auxiliarybar *:not(.pane-header):not(.panel-header):not(.composite-title):not(.monaco-list-row):not(.monaco-tl-row),
-.monaco-workbench .part.panel *:not(.pane-header):not(.panel-header):not(.monaco-list-row),
 .monaco-workbench .part.activitybar *,
 .monaco-workbench .part.titlebar * {
   background-color: transparent !important;
@@ -458,6 +465,105 @@ div.context-view {
   background: rgba(90, 150, 255, 0.4) !important;
   backdrop-filter: blur(5px) !important;
   -webkit-backdrop-filter: blur(5px) !important;
+}
+
+/* 终端 sticky scroll 标题栏 - 添加背景和模糊 */
+.terminal-sticky-scroll,
+.monaco-workbench .terminal-sticky-scroll,
+.part.panel .terminal-sticky-scroll {
+  background: rgba(30, 30, 30, 0.28) !important;
+  background-color: rgba(30, 30, 30, 0.28) !important;
+  backdrop-filter: blur(5px) saturate(180%) !important;
+  position: relative !important;
+  z-index: 1000 !important;
+}
+
+/* 警告对话框 - 添加模糊效果 */
+.monaco-alert {
+  background: rgba(30, 30, 30, 0.85) !important;
+  backdrop-filter: var(--glass-blur) var(--glass-saturate) var(--glass-brightness) !important;
+  -webkit-backdrop-filter: var(--glass-blur) var(--glass-saturate) var(--glass-brightness) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 16px 50px 0 rgba(0, 0, 0, 0.6) !important;
+  border-radius: 12px !important;
+}
+
+/* 设置页面 - 透明背景 */
+/* 左侧设置菜单 */
+.monaco-workbench .settings-editor .settings-toc-container,
+.settings-editor .settings-toc-container {
+  background: transparent !important;
+}
+
+.monaco-workbench .settings-editor .settings-toc-wrapper,
+.settings-editor .settings-toc-wrapper {
+  background: transparent !important;
+}
+
+/* 设置项列表 */
+.monaco-workbench .settings-editor .settings-body,
+.settings-editor .settings-body {
+  background: transparent !important;
+}
+
+/* 单个设置项 */
+.monaco-workbench .settings-editor .setting-item,
+.settings-editor .setting-item {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* 设置项 hover 效果 */
+.monaco-workbench .settings-editor .setting-item:hover,
+.settings-editor .setting-item:hover {
+  background: rgba(255, 255, 255, 0.03) !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+}
+
+/* 设置分组标题 */
+.monaco-workbench .settings-editor .settings-group-title-label,
+.settings-editor .settings-group-title-label {
+  background: rgba(30, 30, 30, 0.3) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border-radius: 8px !important;
+}
+
+/* 设置左侧菜单项 */
+.monaco-workbench .settings-editor .settings-toc-entry,
+.settings-editor .settings-toc-entry {
+  background: transparent !important;
+}
+
+.monaco-workbench .settings-editor .settings-toc-entry:hover,
+.settings-editor .settings-toc-entry:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+}
+
+.monaco-workbench .settings-editor .settings-toc-entry.selected,
+.settings-editor .settings-toc-entry.selected {
+  background: rgba(90, 150, 255, 0.2) !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+}
+
+/* 设置页面的 monaco-list 背景透明 */
+.monaco-workbench .settings-editor .monaco-list .monaco-list-rows,
+.settings-editor .monaco-list .monaco-list-rows,
+.monaco-list.list_id_6 .monaco-list-rows,
+.monaco-list.list_id_7 .monaco-list-rows {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* 设置页面中所有 monaco-list */
+.monaco-workbench .settings-editor .monaco-list,
+.settings-editor .monaco-list {
+  background: transparent !important;
+  background-color: transparent !important;
 }
 `;
 }
