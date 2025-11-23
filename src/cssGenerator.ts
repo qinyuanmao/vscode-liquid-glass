@@ -84,10 +84,9 @@ body,
   -webkit-backdrop-filter: blur(5px) !important;
 }
 
-/* 侧边栏和面板半透明 */
+/* 侧边栏半透明 */
 .monaco-workbench .part.sidebar,
 .monaco-workbench .part.auxiliarybar,
-.monaco-workbench .part.panel,
 .monaco-workbench .part.activitybar,
 .monaco-workbench .part.titlebar,
 .monaco-workbench .part.statusbar {
