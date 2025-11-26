@@ -396,77 +396,6 @@ div.context-view {
   border-radius: 6px !important;
 }
 
-/* ==================== 终端相关修复 ==================== */
-
-/* 终端 panel 增加背景不透明度 */
-.monaco-workbench .part.panel {
-  background: rgba(30, 30, 30, 0.85) !important;
-  background-color: rgba(30, 30, 30, 0.85) !important;
-}
-
-/* 终端 pane-header 确保不透明，防止字体重叠 */
-.monaco-workbench .part.panel .pane-header,
-.monaco-workbench .part.panel .panel-header,
-.monaco-workbench .part.panel .composite-title {
-  background: rgba(30, 30, 30, 0.98) !important;
-  background-color: rgba(30, 30, 30, 0.98) !important;
-  backdrop-filter: blur(20px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-  position: relative !important;
-  z-index: 100 !important;
-}
-
-/* 终端光标增强可见性 */
-.monaco-workbench .terminal .xterm-cursor-layer .xterm-cursor-block,
-.terminal .xterm-cursor-layer .xterm-cursor-block,
-.xterm-cursor-layer .xterm-cursor-block {
-  opacity: 1 !important;
-  background: rgba(255, 255, 255, 0.9) !important;
-}
-
-.monaco-workbench .terminal .xterm-cursor-layer .xterm-cursor-outline,
-.terminal .xterm-cursor-layer .xterm-cursor-outline,
-.xterm-cursor-layer .xterm-cursor-outline {
-  opacity: 1 !important;
-  border-color: rgba(255, 255, 255, 0.9) !important;
-}
-
-.monaco-workbench .terminal .xterm-cursor-layer .xterm-cursor-bar,
-.terminal .xterm-cursor-layer .xterm-cursor-bar,
-.xterm-cursor-layer .xterm-cursor-bar {
-  opacity: 1 !important;
-  background: rgba(255, 255, 255, 0.9) !important;
-}
-
-.monaco-workbench .terminal .xterm-cursor-layer .xterm-cursor-underline,
-.terminal .xterm-cursor-layer .xterm-cursor-underline,
-.xterm-cursor-layer .xterm-cursor-underline {
-  opacity: 1 !important;
-  border-bottom-color: rgba(255, 255, 255, 0.9) !important;
-}
-
-/* 终端选中文本增强可见性 */
-.monaco-workbench .terminal .xterm-selection,
-.terminal .xterm-selection,
-.xterm-selection {
-  background: rgba(90, 150, 255, 0.5) !important;
-  opacity: 1 !important;
-}
-
-/* Panel 中的 list 选中效果增强 */
-.monaco-workbench .part.panel .monaco-list-row:hover {
-  background: rgba(255, 255, 255, 0.15) !important;
-  backdrop-filter: blur(5px) !important;
-  -webkit-backdrop-filter: blur(5px) !important;
-}
-
-.monaco-workbench .part.panel .monaco-list-row.focused,
-.monaco-workbench .part.panel .monaco-list-row.selected {
-  background: rgba(90, 150, 255, 0.4) !important;
-  backdrop-filter: blur(5px) !important;
-  -webkit-backdrop-filter: blur(5px) !important;
-}
-
 /* 终端 sticky scroll 标题栏 - 添加背景和模糊 */
 .terminal-sticky-scroll,
 .monaco-workbench .terminal-sticky-scroll,
@@ -562,6 +491,100 @@ div.context-view {
 /* 设置页面中所有 monaco-list */
 .monaco-workbench .settings-editor .monaco-list,
 .settings-editor .monaco-list {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* ==================== Jupyter Notebook 透明背景 ==================== */
+
+/* Notebook 编辑器容器 */
+.monaco-workbench .notebookOverlay,
+.monaco-workbench .notebook-editor,
+.notebookOverlay,
+.notebook-editor {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Notebook 单元格列表 */
+.monaco-workbench .notebook-cell-list,
+.notebook-cell-list {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* 单个 Notebook 单元格 */
+.monaco-workbench .cell,
+.monaco-workbench .notebook-cell,
+.monaco-workbench .code-cell-row,
+.monaco-workbench .markdown-cell-row,
+.cell,
+.notebook-cell,
+.code-cell-row,
+.markdown-cell-row {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* 单元格输入区域 */
+.monaco-workbench .cell-editor-container,
+.monaco-workbench .input-cell-container,
+.cell-editor-container,
+.input-cell-container {
+  background: rgba(30, 30, 30, 0.2) !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+  border-radius: 8px !important;
+}
+
+/* 单元格输出区域 */
+.monaco-workbench .cell-output-container,
+.monaco-workbench .output-container,
+.cell-output-container,
+.output-container {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Notebook 工具栏 */
+.monaco-workbench .notebook-toolbar,
+.monaco-workbench .notebook-cell-toolbar,
+.notebook-toolbar,
+.notebook-cell-toolbar {
+  background: rgba(30, 30, 30, 0.3) !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+  border-radius: 6px !important;
+}
+
+/* 单元格选中效果 */
+.monaco-workbench .notebook-cell.focused,
+.monaco-workbench .notebook-cell.selected,
+.notebook-cell.focused,
+.notebook-cell.selected {
+  background: rgba(90, 150, 255, 0.1) !important;
+}
+
+/* Notebook 输出内容区域 */
+.monaco-workbench .output,
+.monaco-workbench .cell-output,
+.output,
+.cell-output {
+  background: rgba(30, 30, 30, 0.15) !important;
+  backdrop-filter: blur(3px) !important;
+  -webkit-backdrop-filter: blur(3px) !important;
+  border-radius: 6px !important;
+}
+
+/* Notebook 滚动区域 */
+.monaco-workbench .notebook-editor .monaco-scrollable-element,
+.notebook-editor .monaco-scrollable-element {
+  background: transparent !important;
+}
+
+/* Notebook editor 单元格列表行容器 */
+.notebook-editor > .cell-list-container > .monaco-list > .monaco-list-rows,
+.monaco-workbench .notebook-editor > .cell-list-container > .monaco-list > .monaco-list-rows {
   background: transparent !important;
   background-color: transparent !important;
 }

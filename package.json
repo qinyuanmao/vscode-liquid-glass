@@ -2,7 +2,7 @@
   "name": "vscode-liquid-glass",
   "displayName": "VSCode Liquid Glass",
   "description": "Beautiful liquid glass effect for VSCode with customizable wallpaper",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "publisher": "GarfieldQin",
   "icon": "icon.png",
   "engines": {

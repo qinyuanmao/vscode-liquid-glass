@@ -101,7 +101,8 @@ For the best liquid glass effect, add these color customizations to your `settin
     "peekViewResult.background": "#00000000",
     "peekViewTitle.background": "#00000000",
     "breadcrumb.background": "#00000000",
-    "breadcrumbPicker.background": "#00000000"
+    "breadcrumbPicker.background": "#00000000",
+    "notebook.editorBackground": "#00000000"
   }
 }
 ```
